@@ -11,6 +11,16 @@
       ]
     },
     {
+      "type": "cosmosDB",
+      "name": "user",
+      "databaseName": "BudgetStream",
+      "collectionName": "Users",
+      "connectionStringSetting": "UserStore.ConnectionString",
+      "direction": "in",
+      "Id": "{id}",
+      "PartitionKey": "{userId}"
+    },
+    {
       "type": "http",
       "direction": "out",
       "name": "res"

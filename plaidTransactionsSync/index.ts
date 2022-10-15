@@ -1,15 +1,30 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
+import { AppSettings } from "../core/appSettings";
+import { FIKey, User } from "../core/models";
+import PlaidService from "../core/plaidService";
 
-const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
-    context.log('HTTP trigger function processed a request.');
-    const name = (req.query.name || (req.body && req.body.name));
-    const responseMessage = name
-        ? "Hello, " + name + ". This HTTP triggered function executed successfully."
-        : "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.";
+const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest, user:User): Promise<void> {
+    const plaidService = new PlaidService();
+    await plaidService.loadSettingsFrom(new AppSettings());
+    const {
+        webhookCode: webhookCode,
+        itemId: plaidItemId,
+    } = req.body;
 
+
+    // todo: validate caller as Plaid.
+    // todo: validate the type of webhook call: switch (webhookCode) ... case "transactions" ...
+    // todo: validate provided input matches itemId for the user.
+
+    const fiKey:FIKey = user.fiKeys.find(key => key.itemId == plaidItemId);
+    if (!fiKey)
+        throw new Error("Invalid itemId provided for the given user.");
+        
+    const resp = await plaidService.transactionSync(fiKey);
+
+    context.bindings.transactionsQueue = resp.added;
     context.res = {
-        // status: 200, /* Defaults to 200 */
-        body: responseMessage
+        body: `${resp.added.length} transactions queued for user ${user.id}.`
     };
 
 };
