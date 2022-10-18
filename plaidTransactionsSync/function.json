@@ -24,6 +24,13 @@
       "type": "http",
       "direction": "out",
       "name": "res"
+    },
+    {
+      "type": "queue",
+      "direction": "out",
+      "name": "transactionsQueue",
+      "queueName": "transactions-queue",
+      "connection": "TransactionsQueue.ConnectionString"
     }
   ],
   "scriptFile": "../dist/plaidTransactionsSync/index.js"
