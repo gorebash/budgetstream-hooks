@@ -17,8 +17,7 @@
       "collectionName": "Users",
       "connectionStringSetting": "UserStore.ConnectionString",
       "direction": "in",
-      "Id": "{id}",
-      "PartitionKey": "{userId}"
+      "sqlQuery": "SELECT * FROM fk in Users.fiKeys where fk.itemId = '{itemId}'"
     },
     {
       "type": "http",
