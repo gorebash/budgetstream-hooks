@@ -6,10 +6,10 @@ import PlaidService from "../core/plaidService";
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const plaidService = new PlaidService();
     await plaidService.loadSettingsFrom(new AppSettings());
-    const {
-        webhookCode: webhookCode,
-        itemId: plaidItemId,
-    } = req.body;
+    // const {
+    //     webhookCode: webhookCode,
+    //     itemId: plaidItemId,
+    // } = req.body;
 
     // todo: validate caller as Plaid.
     // todo: validate the type of webhook call: switch (webhookCode) ... case "transactions" ...

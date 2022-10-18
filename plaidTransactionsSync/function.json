@@ -17,7 +17,7 @@
       "collectionName": "Users",
       "connectionStringSetting": "UserStore.ConnectionString",
       "direction": "in",
-      "sqlQuery": "SELECT * FROM fk in Users.fiKeys where fk.itemId = '{itemId}'"
+      "sqlQuery": "SELECT * FROM fk in Users.fiKeys where fk.itemId = '{item_id}'"
     },
     {
       "type": "http",
