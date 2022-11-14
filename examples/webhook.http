@@ -1,4 +1,6 @@
+
 # Fire Webhook
+# Tells plaid to initiate webhook calls as if new sync events occured, for the purposes of testing.
 post https://sandbox.plaid.com/sandbox/item/fire_webhook
 Content-Type: application/json
 
@@ -13,28 +15,19 @@ Content-Type: application/json
 ###
 
 
-# Test case: No transactions for the item.
-post http://localhost:7071/api/TransactionsWebhook
+# Fire Webhook Receiver (mock webhook call)
+# This mocks the sync call that Plaid will make to this endpiont, sending a Plaid item_id.
+# Using the provided item ID, the function calls back to plaid to retrieve new transactions.
+# The new transactions are enqueued for notifications.
+
+post http://localhost:7072/api/plaidTransactionsSync
 Content-Type: application/json
 
 {
-    "id": "7ff3d77855419fed88f996d204b449ae",
-    "userId": "Thor",
-    "webhookCode": "SYNC_UPDATES_AVAILABLE",
-    "itemId": "d1gM5Q19dvIn9wqQVqm6U9aWo77bVMtZDGj7w"
-}
-
-
-###
-
-
-# Has transactions
-post http://localhost:7071/api/TransactionsWebhook
-Content-Type: application/json
-
-{
-    "id": "7ff3d77855419fed88f996d204b449ae",
-    "userId": "Thor",
-    "webhookCode": "SYNC_UPDATES_AVAILABLE",
-    "itemId": "Dbz6wd5xabcX3WLgdv9eCAMG4NrpZGSvnDlKg"
+  "webhook_type": "TRANSACTIONS",
+  "webhook_code": "SYNC_UPDATES_AVAILABLE",
+  "item_id": "ogeAZK35BDcQj38gV4kJFjGpnGQGxXtRx78lB",
+  "initial_update_complete": true,
+  "historical_update_complete": false,
+  "environment": "sandbox"
 }

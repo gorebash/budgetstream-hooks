@@ -3,22 +3,23 @@ import { AppSettings } from "../core/appSettings";
 import { FIKey, User } from "../core/models";
 import PlaidService from "../core/plaidService";
 
-const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest, fiKeys:Array<FIKey>): Promise<void> {
     const plaidService = new PlaidService();
     await plaidService.loadSettingsFrom(new AppSettings());
-    // const {
-    //     webhookCode: webhookCode,
-    //     itemId: plaidItemId,
-    // } = req.body;
+    const {
+        webhookCode: webhookCode,
+        itemId: plaidItemId,
+    } = req.body;
 
     // todo: validate caller as Plaid.
     // todo: validate the type of webhook call: switch (webhookCode) ... case "transactions" ...
     // todo: validate provided input matches itemId for the user.
 
-    const fiKey = context.bindings.documents[0];
-    if (!fiKey)
+    //const fiKey = context.bindings.documents[0];
+    if (!fiKeys?.length)
         throw new Error("Invalid itemId provided for the given user.");
-        
+    
+    const fiKey = fiKeys[0];
     const resp = await plaidService.transactionSync(fiKey);
 
     context.bindings.transactionsQueue = resp.added;
